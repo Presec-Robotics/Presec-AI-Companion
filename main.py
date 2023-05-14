@@ -38,7 +38,3 @@ def listen() -> dict:
 			return {'res': said.lower(), 'code': 1, 'error': str(e)}
 
 	return {'res': said.lower(), 'code': 0}
-
-print("Listening...")
-prompt = listen()['res']
-speak(prompt)
