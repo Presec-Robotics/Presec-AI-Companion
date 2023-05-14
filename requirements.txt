@@ -1,4 +1,3 @@
-PyAudio
-gTTS
+pyttsx3
 SpeechRecognition
 playsound
