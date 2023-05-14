@@ -13,13 +13,17 @@ def speak(text : str) -> None:
 	engine.say(text)
 	engine.runAndWait()
 
-def listen() -> str:
+def listen() -> dict:
 	"""
 	This function takes audio input by the user through the microphone
 
 	And turns it into words
 
-	( Returs a string in lower case )
+	It returs a dictionary containing the response and error code 
+	
+	Response: is a string in lower case 
+
+	Error code: number ie. 1 or 0
 	"""
 	r = sr.Recognizer()
 	with sr.Microphone() as source:
@@ -29,5 +33,6 @@ def listen() -> str:
 			said = r.recognize_google(audio)
 		except Exception as e:
 			print("Exception:", str(e))
+			return {'res': said.lower(), 'code': 1}
 
-	return said.lower()
+	return {'res': said.lower(), 'code': 0}
