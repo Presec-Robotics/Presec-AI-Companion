@@ -35,6 +35,6 @@ def listen() -> dict:
 			said = r.recognize_google(audio)
 		except Exception as e:
 			print("Exception:", str(e))
-			return {'res': said.lower(), 'code': 1, 'error': str(e)}
+			return {'res': said.lower(), 'code': 1, 'error': e}
 
 	return {'res': said.lower(), 'code': 0}
