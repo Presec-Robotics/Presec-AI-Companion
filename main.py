@@ -3,7 +3,7 @@ import time
 import speech_recognition as sr
 import pyttsx3
 
-def speak(text):
+def speak(text : str) -> None:
 	"""
 	This function takes in input text, generates an audio file from it and plays the sound
 	
@@ -13,7 +13,7 @@ def speak(text):
 	engine.say(text)
 	engine.runAndWait()
 
-def listen():
+def listen() -> str:
 	"""
 	This function takes audio input by the user through the microphone
 
