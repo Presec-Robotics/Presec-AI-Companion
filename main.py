@@ -13,4 +13,21 @@ def speak(text):
 	engine.say(text)
 	engine.runAndWait()
 
-speak("Hello!")
+def listen():
+	"""
+	This function takes audio input by the user through the microphone
+
+	And turns it into words
+
+	( Returs a string in lower case )
+	"""
+	r = sr.Recognizer()
+	with sr.Microphone() as source:
+		audio = r.listen(source)
+		said = ""
+		try:
+			said = r.recognize_google(audio)
+		except Exception as e:
+			print("Exception:", str(e))
+
+	return said.lower()
