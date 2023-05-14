@@ -19,11 +19,13 @@ def listen() -> dict:
 
 	And turns it into words
 
-	It returs a dictionary containing the response and error code 
+	It returs a dictionary containing the response, error and error code 
 	
 	Response: is a string in lower case 
 
 	Error code: number ie. 1 or 0
+
+	Error: description of the error
 	"""
 	r = sr.Recognizer()
 	with sr.Microphone() as source:
@@ -33,6 +35,10 @@ def listen() -> dict:
 			said = r.recognize_google(audio)
 		except Exception as e:
 			print("Exception:", str(e))
-			return {'res': said.lower(), 'code': 1}
+			return {'res': said.lower(), 'code': 1, 'error': str(e)}
 
 	return {'res': said.lower(), 'code': 0}
+
+print("Listening...")
+prompt = listen()['res']
+speak(prompt)
