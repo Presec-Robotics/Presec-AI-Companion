@@ -66,7 +66,7 @@ async def respond(prompt : str) -> dict:
 			]
 		}).json()
 
-		data = response["data"]
+		data = response["data"][0]
 	except Exception as e:
 		return { 'res': data, 'code': 1, 'error': e }
 	
