@@ -5,7 +5,7 @@ import pyttsx3
 import requests
 import speech_recognition as sr
 
-def speak(text : str) -> None:
+async def speak(text : str) -> None:
 	"""
 	This function takes in input text, generates an audio file from it and plays the sound
 
@@ -15,7 +15,7 @@ def speak(text : str) -> None:
 	engine.say(text)
 	engine.runAndWait()
 
-def listen() -> dict:
+async def listen() -> dict:
 	"""
 	This function takes audio input by the user through the microphone
 
@@ -41,7 +41,7 @@ def listen() -> dict:
 
 	return { 'res': said.lower(), 'code': 0, 'error': None }
 
-def respond(prompt : str) -> dict:
+async def respond(prompt : str) -> dict:
 	"""
 	This function takes in an input prompt as a string and interacts with
 
