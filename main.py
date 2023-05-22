@@ -5,15 +5,27 @@ import pyttsx3
 import requests
 import speech_recognition as sr
 
-async def speak(text : str) -> None:
+async def speak(text : str) -> dict:
 	"""
 	This function takes in input text, generates an audio file from it and plays the sound
 
 	*Text input can only be recognised if it is in english*
+
+	Returns Dictionary { error-code, error }
+
+	Error Code (code): int ( 1 for error and 0 for success )
+
+	Error (error): a python Exception
 	"""
-	engine = pyttsx3.init()
-	engine.say(text)
-	engine.runAndWait()
+	try:
+		engine = pyttsx3.init()
+		engine.say(text)
+		engine.runAndWait()
+
+		return { 'code' : 0, 'error': None }
+	except Exception as e:
+		return { 'code' : 1, 'error': e }
+	
 
 async def listen() -> dict:
 	"""
@@ -27,7 +39,7 @@ async def listen() -> dict:
 
 	Error code (code): number ie. 1 or 0
 
-	Error (error): description of the error
+	Error (error): a python Exception
 	"""
 	r = sr.Recognizer()
 	with sr.Microphone() as source:
@@ -36,7 +48,6 @@ async def listen() -> dict:
 		try:
 			said = r.recognize_google(audio)
 		except Exception as e:
-			print("Exception:", str(e))
 			return { 'res': said.lower(), 'code': 1, 'error': e }
 
 	return { 'res': said.lower(), 'code': 0, 'error': None }
@@ -55,7 +66,7 @@ async def respond(prompt : str) -> dict:
 
 	Error code (code): number ie. 1 or 0
 
-	Error (error): description of the error
+	Error (error): a python Exception
 	"""
 	data = ""
 	
