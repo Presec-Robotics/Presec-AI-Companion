@@ -1,5 +1,6 @@
 import os
 import time
+import asyncio
 import pyttsx3
 import requests
 import speech_recognition as sr
@@ -40,7 +41,7 @@ def listen() -> dict:
 
 	return { 'res': said.lower(), 'code': 0, 'error': None }
 
-def respond(prompt : str) -> str:
+def respond(prompt : str) -> dict:
 	"""
 	This function takes in an input prompt as a string and interacts with
 
