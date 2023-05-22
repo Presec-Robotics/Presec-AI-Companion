@@ -1,12 +1,13 @@
 import os
 import time
-import speech_recognition as sr
 import pyttsx3
+import requests
+import speech_recognition as sr
 
 def speak(text : str) -> None:
 	"""
 	This function takes in input text, generates an audio file from it and plays the sound
-	
+
 	*Text input can only be recognised if it is in english*
 	"""
 	engine = pyttsx3.init()
@@ -20,12 +21,12 @@ def listen() -> dict:
 	And turns it into words
 
 	It returs a dictionary containing the response, error and error code 
-	
-	Response: is a string in lower case 
 
-	Error code: number ie. 1 or 0
+	Response (res): is a string in lower case 
 
-	Error: description of the error
+	Error code (code): number ie. 1 or 0
+
+	Error (error): description of the error
 	"""
 	r = sr.Recognizer()
 	with sr.Microphone() as source:
@@ -38,3 +39,34 @@ def listen() -> dict:
 			return { 'res': said.lower(), 'code': 1, 'error': e }
 
 	return { 'res': said.lower(), 'code': 0, 'error': None }
+
+def respond(prompt : str) -> str:
+	"""
+	This function takes in an input prompt as a string and interacts with
+
+	the OpenAssistant text-based AI (https://huggingface.co/OpenAssistant/oasst-sft-4-pythia-12b-epoch-3.5)
+
+	through an API space (https://huggingface.co/spaces/onuri/asst) to generate response object / dictionary
+
+	the function returns a dictionary containing { response, code, error }
+
+	Response (res): is a string for the response
+
+	Error code (code): number ie. 1 or 0
+
+	Error (error): description of the error
+	"""
+	data = ""
+	
+	try:
+		response = requests.post("https://onuri-asst.hf.space/run/predict", json={
+			"data": [
+				prompt,
+			]
+		}).json()
+
+		data = response["data"]
+	except Exception as e:
+		return { 'res': data, 'code': 1, 'error': e }
+	
+	return { 'res': data, 'code': 0, 'error': None }
