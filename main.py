@@ -46,10 +46,9 @@ async def listen() -> dict:
 		said = ""
 		try:
 			said = r.recognize_google(audio)
+			return { 'res': said, 'code': 0, 'error': None }
 		except Exception as e:
-			return { 'res': said.lower(), 'code': 1, 'error': e }
-
-	return { 'res': said.lower(), 'code': 0, 'error': None }
+			return { 'res': said, 'code': 1, 'error': e }
 
 async def respond(prompt : str) -> dict:
 	"""
