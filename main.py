@@ -1,11 +1,9 @@
-import os
-import time
-import asyncio
 import pyttsx3
 import requests
 import speech_recognition as sr
+from time import sleep
 
-async def speak(text : str) -> dict:
+def speak(text : str) -> dict:
 	"""
 	This function takes in input text, generates an audio file from it and plays the sound
 
@@ -26,7 +24,7 @@ async def speak(text : str) -> dict:
 	except Exception as e:
 		return { 'code' : 1, 'error': e }
 
-async def listen() -> dict:
+def listen() -> dict:
 	"""
 	This function takes audio input by the user through the microphone
 
@@ -50,7 +48,7 @@ async def listen() -> dict:
 		except Exception as e:
 			return { 'res': said, 'code': 1, 'error': e }
 
-async def respond(prompt : str) -> dict:
+def respond(prompt : str) -> dict:
 	"""
 	This function takes in an input prompt as a string and interacts with
 
@@ -80,26 +78,3 @@ async def respond(prompt : str) -> dict:
 		return { 'res': data, 'code': 1, 'error': e }
 	
 	return { 'res': data, 'code': 0, 'error': None }
-
-async def main():
-	while True:
-		listen_task = asyncio.create_task(listen())
-		result = await listen_task
-
-		if result['code'] == 0:
-			print(result['res'])
-			response_task = asyncio.create_task(respond(result['res']))
-			result = await response_task
-			if result['code'] == 0:
-				print(result['res'])
-				speech_task = asyncio.create_task(speak(result['res']))
-				result = await speech_task
-				if result['code'] == 1:
-					print(result['error'])
-			else:
-				print(result['error'])
-		else:
-			print(result['error'])
-
-if __name__ == '__main__':
-	asyncio.run(main())
