@@ -62,7 +62,9 @@ Data is Transfered to each part of the application as follows:
 
 ## Screenshots
 
-None
+![Assistant Listening](./Images/Screenshot_01.png)
+![Assistant Listening](./Images/Screenshot_03.png)
+![Assistant Processing](./Images/Screenshot_02.png)
 
 ## Resources
 
