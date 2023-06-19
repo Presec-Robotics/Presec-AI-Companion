@@ -1,7 +1,6 @@
 import pyttsx3
 import requests
 import speech_recognition as sr
-from time import sleep
 
 def speak(text : str) -> dict:
 	"""
