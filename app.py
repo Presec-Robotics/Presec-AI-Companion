@@ -5,6 +5,8 @@ from random import randint
 import main as sm
 import asyncio 
 from threading import *
+import pyaudio
+import numpy as np
 
 class Circle():
     def __init__(self, parent, x, y, r, color):
@@ -40,14 +42,29 @@ class Text():
     def render(self, screen):
         screen.blit(self.text_surface,(self.x, self.y))
 
+import sounddevice as sd
+import numpy as np
+
 def get_pitch():
-    return randint(0, 100)
+    CHUNK_SIZE = 1024
+    SAMPLE_RATE = 44100
+
+    # Create PyAudio stream
+    p = pyaudio.PyAudio()
+    stream = p.open(format=pyaudio.paInt16, channels=1, rate=SAMPLE_RATE, input=True, frames_per_buffer=CHUNK_SIZE)
+
+    data = stream.read(CHUNK_SIZE)
+    samples = np.frombuffer(data, dtype=np.int16)
+
+    audio_level = np.abs(samples).mean()
+
+    return audio_level
 
 is_listening = True
 is_processing = False
 is_speaking = False
 
-prompt = ""
+prompt = "hello"
 response = ""
 error = ""
 
@@ -78,7 +95,7 @@ async def main():
             error = data['error']
         print(data)
 
-    def respond(prompt):
+    def process(prompt):
         data = sm.respond(prompt)
 
         global response, is_speaking, is_processing, error
@@ -90,28 +107,27 @@ async def main():
         else:
             error = data['error']
 
-    def speak(response):
+    def respond(response):
         data = sm.speak(response)
 
         global prompt, is_speaking, is_listening, error
 
         if data['code'] == 0:
-            prompt = data['res']
             is_speaking = False
             is_listening = True
         else:
             error = data['error']
 
     listen_thread = Thread(target=listen)
-    respond_thread = Thread(target=respond, args=[prompt])
-    speak_thread = Thread(target=speak, args=[response])
+    process_thread = Thread(target=process, args=[prompt])
+    respond_thread = Thread(target=respond, args=[response])
 
-    if is_listening:
+    if is_listening and not listen_thread.is_alive():
         listen_thread.start()
-    elif is_processing:
+    elif is_processing and not process_thread.is_alive():
+        process_thread.start()
+    elif is_speaking and not respond_thread.is_alive():
         respond_thread.start()
-    elif is_speaking:
-        speak_thread.start()
 
     startTime = pygame.time.get_ticks()
 
@@ -122,10 +138,8 @@ async def main():
 
         screen.fill("#FFFFFF")
 
-        # print(is_listening, is_processing, is_speaking)
         if is_listening:
-            pitch = get_pitch()
-            scale = pitch * 0.5 + 20
+            scale = min(100 ,get_pitch() / 200 + 20)
             
             mid = Circle(screen, 10, 10, scale, "#B3AED3")
             mid.center()
