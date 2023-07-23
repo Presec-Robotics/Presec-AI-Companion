@@ -6,7 +6,6 @@ import asyncio
 from threading import Thread
 import pyaudio
 import numpy as np
-from time import sleep
 
 
 class Circle():
@@ -72,18 +71,11 @@ def get_pitch():
     return audio_level
 
 
-def wrap_text(text: str, length=10):
-    try:
-        wrapped_text = text.replace(" ", "\n")
-        return wrapped_text
-    except IndexError:
-        return text
-
-is_listening = False
-is_processing = True
+is_listening = True
+is_processing = False
 is_speaking = False
 
-prompt = "what is quantum physics"
+prompt = ""
 response = ""
 error = ""
 
@@ -123,7 +115,8 @@ async def main():
         global prompt, response, error, is_speaking, is_processing
 
         # data = sm.respond(prompt)
-        data = {"code": 0, "res": "Hello Pascall de creator, i am PAC (presec A.I companion), your very own AI assistant, how may i help you? blah blah blah blah blah blah blah blah blah blah"}
+        data = {
+            "code": 0, "res": "Hello Pascall de creator, i am PAC (presec A.I companion), your very own AI assistant, how may i help you? blah blah blah blah blah blah blah blah blah blah"}
 
         if data['code'] == 0:
             response = data['res']
@@ -183,7 +176,7 @@ async def main():
 
             mini.set_revolution(i, 110, mid.x, mid.y)
 
-            text = Text(wrap_text(prompt), 100, 100, 36, "Black")
+            text = Text(prompt, 100, 100, 36, "Black")
             text.center_x(screen)
             text.center_y(screen)
             text.y += 200
@@ -202,7 +195,7 @@ async def main():
             mid.center()
             mid.draw(screen)
 
-            text = Text(wrap_text(response), 100, 100, 36, "Black")
+            text = Text(response, 100, 100, 36, "Black")
             text.center_x(screen)
             text.center_y(screen)
             text.y += 200
