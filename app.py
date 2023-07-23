@@ -114,9 +114,7 @@ async def main():
     def process():
         global prompt, response, error, is_speaking, is_processing
 
-        # data = sm.respond(prompt)
-        data = {
-            "code": 0, "res": "Hello Pascall de creator, i am PAC (presec A.I companion), your very own AI assistant, how may i help you? blah blah blah blah blah blah blah blah blah blah"}
+        data = sm.respond(prompt)
 
         if data['code'] == 0:
             response = data['res']
