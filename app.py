@@ -140,6 +140,8 @@ async def main():
         else:
             error = data['error']
 
+        print("listen thread reached end")
+
     def process():
         """
         Handle processing
@@ -156,6 +158,8 @@ async def main():
         else:
             print(error)
             error = data['error']
+        
+        print("process thread reached end")
 
     def respond():
         """
@@ -171,6 +175,8 @@ async def main():
             is_listening = True
         else:
             error = data['error']
+
+        print("respond thread reached end")
 
     # create Threads to handle tasks in backgroud ( For increasing performance )
     listen_thread = Thread(target=listen)
@@ -190,6 +196,7 @@ async def main():
         if is_listening:
             # start listening thread if it is'nt already running
             if not listen_thread.is_alive():
+                print("listen thread started")
                 listen_thread.start()
 
             # determing the scale of the audio visualizer
@@ -210,6 +217,7 @@ async def main():
         
         # render processing scene
         elif is_processing:
+            print("process thread started")
             # start processing thread if it is'nt already running
             if not process_thread.is_alive():
                 process()
@@ -238,6 +246,7 @@ async def main():
 
         # render speaking scene
         elif is_speaking:
+            print("respond thread started")
             # start respond thread if it is'nt already running
             if not respond_thread.is_alive():
                 respond_thread.start()
